@@ -71,7 +71,7 @@ public class global {
 
     public static Language LANGUAGE;
     public static String DEFAULT_LANGUAGE;
-    public static boolean IS_AD_ENEABLED = true;
+    public static boolean IS_AD_ENEABLED = false;
     public static ArrayList<String> LOG_REPORT = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)

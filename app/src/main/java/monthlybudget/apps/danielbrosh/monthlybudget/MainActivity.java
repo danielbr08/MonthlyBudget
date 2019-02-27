@@ -33,6 +33,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +68,7 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.writeToFile;
 
 public class MainActivity extends AppCompatActivity
 {
+    private static final int REQUEST_CHOOSER = 1234;
     InterstitialAd mInterstitialAd;
     Intent budgetScreen, transactionsScreen, insertTransactionScreen, createBudgetScreen;
     Spinner refMonthSpinner,languageSpinner;
@@ -81,6 +83,27 @@ public class MainActivity extends AppCompatActivity
     public static myDBAdapter monthlyBudgetDB;
 
     public static Month month;
+
+    public void changeDBFile()
+    {
+
+        File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
+        FileDialog fileDialog = new FileDialog(this, mPath, "." + DB_SUFFIX);
+        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            public void fileSelected(File file) {
+                String dbFilePath = file.toString();
+                //copyFile(dbFilePath,PROJECT_PATH);
+            }
+        });
+        //fileDialog.addDirectoryListener(new FileDialog.DirectorySelectedListener() {
+        //  public void directorySelected(File directory) {
+        //      Log.d(getClass().getName(), "selected dir " + directory.toString());
+        //  }
+        //});
+        //fileDialog.setSelectDirectoryOption(false);
+        fileDialog.showDialog();
+    }
 
     public void initAdFields()
     {
@@ -377,6 +400,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        changeDBFile();
 
         final SharedPreferences  sharedpreference = this.getSharedPreferences(
                 "monthlybudget.apps.danielbrosh.monthlybudget", Context.MODE_PRIVATE);
