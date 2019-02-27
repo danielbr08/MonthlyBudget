@@ -994,6 +994,7 @@ public class global {
         catch(Exception e)
         {
             String s = e.getMessage().toString();
+            s =s;
         }
     }
 

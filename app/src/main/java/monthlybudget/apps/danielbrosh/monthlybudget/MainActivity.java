@@ -8,17 +8,20 @@
 
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,10 +36,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TreeSet;
 
 import static monthlybudget.apps.danielbrosh.monthlybudget.R.id.monthSpinner;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.DB_FILE_NAME;
@@ -58,6 +61,7 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.getDateStartMo
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getSartOfMonth;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getTodayDate;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.isFirstTime;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.reverseDateString;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.setCatPaymentMethodArray;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.setMyBudget;
@@ -68,7 +72,7 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.writeToFile;
 
 public class MainActivity extends AppCompatActivity
 {
-    private static final int REQUEST_CHOOSER = 1234;
+    private int changeDBCounter = 0;
     InterstitialAd mInterstitialAd;
     Intent budgetScreen, transactionsScreen, insertTransactionScreen, createBudgetScreen;
     Spinner refMonthSpinner,languageSpinner;
@@ -84,25 +88,66 @@ public class MainActivity extends AppCompatActivity
 
     public static Month month;
 
-    public void changeDBFile()
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void changeDBFile(View view)
     {
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
-        File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
-        FileDialog fileDialog = new FileDialog(this, mPath, "." + DB_SUFFIX);
-        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            public void fileSelected(File file) {
-                String dbFilePath = file.toString();
-                //copyFile(dbFilePath,PROJECT_PATH);
-            }
-        });
-        //fileDialog.addDirectoryListener(new FileDialog.DirectorySelectedListener() {
-        //  public void directorySelected(File directory) {
-        //      Log.d(getClass().getName(), "selected dir " + directory.toString());
-        //  }
-        //});
-        //fileDialog.setSelectDirectoryOption(false);
-        fileDialog.showDialog();
+        if(!permissionGranted){ // need to handle in result callBack function
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 200);
+        }
+
+        changeDBCounter++;
+        if(changeDBCounter < 1 || !permissionGranted)
+            return;
+
+        monthlyBudgetDB.myhelper.close();
+        changeDBCounter = 0;
+        //String dbFilePath = PROJECT_PATH + "/" + DB_FILE_NAME + "." + DB_SUFFIX;
+        String dbFilePath = DCIM + "/" + DB_FILE_NAME + "/" + DB_FILE_NAME + "." + DB_SUFFIX;
+        copyFile(dbFilePath,DB_FOLDER_PATH);
+        //copyFile(DB_FOLDER_PATH + "/" + DB_FILE_NAME + '.' + DB_SUFFIX, dbFilePath);
+
+        IS_MONTH_CHANGABLE = false;
+
+        TRAN_ID_PER_MONTH_NUMERATOR = 1;
+        DCIM = "";
+        PROJECT_PATH = "";
+        DB_SUFFIX = "db";
+        IS_MONTH_CHANGABLE = false;
+        shopsSet = new TreeSet<String>();
+        isFirstTime = true;
+
+        monthlyBudgetDB = new myDBAdapter(this);
+
+//        if(false)
+//            setMyBudget();
+
+        if(!monthlyBudgetDB.checkBudgetExists() )
+        {
+            budgetButton.setEnabled(false);
+            transactionsButton.setEnabled(false);
+            insertTransactionButton.setEnabled(false);
+        }
+        else
+        {
+            budgetButton.setEnabled(true);
+            transactionsButton.setEnabled(true);
+            insertTransactionButton.setEnabled(true);
+            createBudgetButton.setEnabled(true);
+            closeMainButton.setEnabled(true);
+
+            boolean isSetFrqTransNeeded = false;
+            if(!monthlyBudgetDB.checkCurrentRefMonthExists())
+                isSetFrqTransNeeded = true;
+            month = new Month(getDateStartMonth());
+            IS_MONTH_CHANGABLE = true;
+            setTitle(getYearMonth(month.getMonth(), '.'));
+            initRefMonthSpinner();
+            if(isSetFrqTransNeeded)
+                //Write frequence transactions
+                setFrqTrans(null,0);
+        }
     }
 
     public void initAdFields()
@@ -400,13 +445,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        changeDBFile();
 
         final SharedPreferences  sharedpreference = this.getSharedPreferences(
                 "monthlybudget.apps.danielbrosh.monthlybudget", Context.MODE_PRIVATE);
         //sharedpreference= PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         DEFAULT_LANGUAGE = sharedpreference.getString("default_language","EN");
-        IS_AD_ENEABLED = sharedpreference.getBoolean("isAdEnable",true);
+        IS_AD_ENEABLED = sharedpreference.getBoolean("isAdEnable",false);
         //sharedpreference.edit().remove("isAdEnable").commit();
         initAdFields();
         refMonthSpinner = (Spinner) findViewById(monthSpinner);
@@ -424,8 +468,10 @@ public class MainActivity extends AppCompatActivity
         insertTransactionScreen = null;
         createBudgetScreen = null;
         refMonthSpinner = (Spinner) findViewById(monthSpinner);
-        //DCIM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        DCIM = getExternalFilesDir(Environment.DIRECTORY_DCIM).toString();
+        DCIM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        //DCIM = getExternalFilesDir(Environment.DIRECTORY_DCIM).toString();
+//        DCIM = Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_DCIM).getAbsolutePath();
         PROJECT_PATH = DCIM + "/" + FILE_NAME;
 
         //copyFile(PROJECT_PATH + "/" + DB_FILE_NAME + "." + DB_SUFFIX, DB_FOLDER_PATH);
