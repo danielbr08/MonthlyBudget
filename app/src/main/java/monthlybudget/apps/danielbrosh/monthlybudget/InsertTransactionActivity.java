@@ -38,15 +38,18 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.TRAN_ID_PER_MO
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.dateFormat;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getSentenceCapitalLetter;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.preferencePath;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.shopsSet;
 
 public class InsertTransactionActivity extends AppCompatActivity
 {
+    final SharedPreferences sharedpreference = this.getSharedPreferences(
+            preferencePath, Context.MODE_PRIVATE);
     Spinner categoriesSpinner;
     Spinner paymentTypeSpinner;
     Button btnSendTransaction;
-    Button btnClose;
     EditText payDateEditText;
+//    Button btnClose;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setTitle(String refMonth)
@@ -59,6 +62,7 @@ public class InsertTransactionActivity extends AppCompatActivity
                 ActionBar.LayoutParams.MATCH_PARENT, // Width of TextView
                 ActionBar.LayoutParams.WRAP_CONTENT);
         tv.setLayoutParams(lp);
+
         tv.setTypeface(null, Typeface.BOLD);
         tv.setTextColor(Color.WHITE);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -72,31 +76,15 @@ public class InsertTransactionActivity extends AppCompatActivity
 
     public void setSpinnersAllignment()
     {
-        ArrayAdapter<String> adapter;
+        ArrayAdapter<String> adapter = null;
         if(LANGUAGE.language.equals("EN"))
-        {
-            //global.setCatArrayHebNames();
             adapter = new ArrayAdapter<String>(this,
                     R.layout.custom_spinner_eng, month.getCategoriesNames());
-            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            categoriesSpinner.setAdapter(adapter);
-
-            adapter = new ArrayAdapter<String>(this,
-                    R.layout.custom_spinner_eng, global.catPaymentMethodArray);
-            paymentTypeSpinner.setAdapter(adapter);
-        }
         else if(LANGUAGE.language.equals("HEB"))
-        {
-            //global.setCatArrayHebNames();
             adapter = new ArrayAdapter<String>(this,
                     R.layout.custom_spinner, month.getCategoriesNames());
-            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            categoriesSpinner.setAdapter(adapter);
-
-            adapter = new ArrayAdapter<String>(this,
-                    R.layout.custom_spinner, global.catPaymentMethodArray);
-            paymentTypeSpinner.setAdapter(adapter);
-        }
+        categoriesSpinner.setAdapter(adapter);
+        paymentTypeSpinner.setAdapter(adapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -104,15 +92,7 @@ public class InsertTransactionActivity extends AppCompatActivity
     {
         setSpinnersAllignment();
 
-        if(month.getTransChanged()) {
-            int maxIDPerMonth = monthlyBudgetDB.getMaxIDPerMonthTRN(month.getMonth());
-            month.updateMonthData(maxIDPerMonth + 1);
-            //month.updateMonthData(1);
-            month.setTransChanged(false);
-        }
-
-        if(shopsSet.size() == 0)
-        {
+        if(shopsSet.size() == 0) {
             ArrayList<String> shops = monthlyBudgetDB.getAllShops();
             shopsSet.addAll(shops);
         }
@@ -225,8 +205,6 @@ public class InsertTransactionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_transaction);
 
-        final SharedPreferences sharedpreference = this.getSharedPreferences(
-                "monthlybudget.apps.danielbrosh.monthlybudget", Context.MODE_PRIVATE);
         //sharedpreference= PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         setButtonsNames();
         setTitle( getYearMonth(month.getMonth(),'.'));
@@ -235,6 +213,12 @@ public class InsertTransactionActivity extends AppCompatActivity
         btnSendTransaction = (Button) findViewById(R.id.sendTransactionButton);
         //btnClose = (Button) findViewById(R.id.closeInsertTransactionButton);
         init();
+
+        if(month.getTransChanged()) {
+            int maxIDPerMonth = monthlyBudgetDB.getMaxIDPerMonthTRN(month.getMonth());
+            month.updateMonthData(maxIDPerMonth + 1);
+            month.setTransChanged(false);
+        }
 
         payDateEditText = (EditText) findViewById(R.id.payDatePlainText);
         payDateEditText.setText(getCurrentDate());
@@ -257,7 +241,6 @@ public class InsertTransactionActivity extends AppCompatActivity
                 DatePickerDialog mDatePicker=new DatePickerDialog(InsertTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                         // TODO Auto-generated method stub
-                    /*      Your code   to get date and time    */
                      String day,month;
                     if(selectedday < 10)
                         day = "0" + selectedday;
@@ -275,25 +258,6 @@ public class InsertTransactionActivity extends AppCompatActivity
                 mDatePicker.show();  }
         });
 
-
-        //Intent i = getIntent();
-        // Receiving the Data
-        //String name = i.getStringExtra("name");
-        // String email = i.getStringExtra("email");
-
-        // Displaying Received data
-        //txtName.setText(name);
-        //txtEmail.setText(email);
-
-        // Binding Click event to Button
-//        btnClose.setOnClickListener(new View.OnClickListener() {
-//
-//            public void onClick(View arg0) {
-//                //Closing SecondScreen Activity
-//                finish();
-//            }
-//        });
-
         btnSendTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 EditText shopET = ((EditText) findViewById(R.id.shopAutoCompleteTextView));
@@ -309,29 +273,13 @@ public class InsertTransactionActivity extends AppCompatActivity
                 String shop = shopET.getText().toString();
                 Date payDate = global.convertStringToDate( payDateET.getText().toString(), dateFormat);
                 double transactionPrice = Double.valueOf(transactionPriceET.getText().toString());
-                if(shop.equals("NoAd6542") && transactionPrice == 7531)
-                {
-                    sharedpreference.edit().putBoolean("isAdEnable",false).apply();
-                    sharedpreference.edit().commit();
-                    IS_AD_ENEABLED = false;
-                    finish();
-                    return;
-                }
+                if(isDisableADTransaction(shop,transactionPrice))
+                    turnOffAD();
 
-                else if(shop.equals("TurnOnAd6542") && transactionPrice == 1357)
-                {
-                    sharedpreference.edit().putBoolean("isAdEnable",true).apply();
-                    sharedpreference.edit().commit();
-                    IS_AD_ENEABLED = true;
-                    finish();
-                    return;
-                }
+                else if(isEnableADTransaction(shop,transactionPrice))
+                    turnOnAD();
 
                 int idPerMonth = monthlyBudgetDB.getMaxIDPerMonthTRN(month.getMonth()) + 1;
-                //TRAN_ID_PER_MONTH_NUMERATOR = idPerMonth;
-                //init on create
-                //int idPerMonth = monthlyBudgetDB.getMaxIDPerMonthTRN(month.getMonth()) + 1;
-                //long transID = monthlyBudgetDB.getMaxIDTRN() + 1;
 
                 Transaction transaction = new Transaction( TRAN_ID_PER_MONTH_NUMERATOR++, categoryName,paymentMethod , shop, payDate, transactionPrice, new Date());
                 boolean isStorno = false;
@@ -340,7 +288,7 @@ public class InsertTransactionActivity extends AppCompatActivity
                 for (Category cat : month.getCategories())
                     if (categoryName.equals(cat.getName()))
                     {
-                        cat.subValRemaining(transactionPrice);
+                        cat.subValBalance(transactionPrice);
                         ArrayList<Transaction> catTrans =  cat.getTransactions();
                         for (Transaction tran : catTrans)
                         {
@@ -373,8 +321,45 @@ public class InsertTransactionActivity extends AppCompatActivity
         });
     }
 
-    public void showMessage(String message)//View view)
-    {
+    private boolean isDisableADTransaction(String val1, double val2){
+        return val1.equals("TurnOffAd6542") && val2 == 7531;
+    }
+
+    private boolean isEnableADTransaction(String val1, double val2){
+        return val1.equals("TurnOnAd6542") && val2 == 1357;
+    }
+
+    private void turnOnAD(){
+        sharedpreference.edit().putBoolean("isAdEnable",true).apply();
+        sharedpreference.edit().commit();
+        IS_AD_ENEABLED = true;
+        finish();
+        return;
+    }
+
+    private void turnOffAD(){
+        sharedpreference.edit().putBoolean("isAdEnable",false).apply();
+        sharedpreference.edit().commit();
+        IS_AD_ENEABLED = false;
+        finish();
+        return;
+    }
+
+    public boolean setErrorEditText(EditText et) {
+        if( et.length() == 0 ) {
+            et.setError(LANGUAGE.requiredField);
+            return true;
+        }
+        return false;
+    }
+
+    public void showMessageNoButton(String message){//View view)
+        Toast.makeText(this, message,
+                Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    public void showMessage(String message){//View view)
         AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
         myAlert.setMessage(message).setPositiveButton(LANGUAGE.close, new DialogInterface.OnClickListener() {
             @Override
@@ -385,23 +370,5 @@ public class InsertTransactionActivity extends AppCompatActivity
         }).setTitle(LANGUAGE.messageName)
                 .create();
         myAlert.show();
-    }
-
-    public boolean setErrorEditText(EditText et)
-    {
-        if( et.length() == 0 )
-        {
-            et.setError(LANGUAGE.requiredField);
-            return true;
-        }
-        return false;
-    }
-
-    public void showMessageNoButton(String message)//View view)
-    {
-        Toast.makeText(this, message,
-                Toast.LENGTH_SHORT).show();
-        finish();
-
     }
 }

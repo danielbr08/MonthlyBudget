@@ -7,8 +7,7 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
  * Created by daniel.brosh on 7/16/2017.
  */
 
-public class Transaction
-{
+public class Transaction{
     private int ID;//Per month
     private String category;
     private String subCategory;
@@ -20,8 +19,7 @@ public class Transaction
     private boolean isStorno;
     private int stornoOf;
 
-    public Transaction( int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate)
-    {
+    public Transaction(int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate) {
         this.ID = ID;
         this.category = category;
         this.subCategory = LANGUAGE.subCategory;
@@ -32,24 +30,20 @@ public class Transaction
         this.registrationDate = registrationDate;
     }
 
+//    public Transaction( int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf) {
+//        this.ID = ID;
+//        this.category = category;
+//        this.subCategory = LANGUAGE.subCategory;
+//        this.paymentMethod = paymentMethod;
+//        this.shop = shop;
+//        this.payDate = payDate;
+//        this.price = price;
+//        this.isStorno = isStorno;
+//        this.stornoOf = stornoOf;
+//        this.registrationDate = registrationDate;
+//    }
 
-
-    public Transaction( int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf)
-    {
-        this.ID = ID;
-        this.category = category;
-        this.subCategory = LANGUAGE.subCategory;
-        this.paymentMethod = paymentMethod;
-        this.shop = shop;
-        this.payDate = payDate;
-        this.price = price;
-        this.isStorno = isStorno;
-        this.stornoOf = stornoOf;
-        this.registrationDate = registrationDate;
-    }
-
-    public Transaction( int ID, String category, String subCategory, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf)
-    {
+    public Transaction( int ID, String category, String subCategory, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf) {
         this.ID = ID;
         this.category = category;
         this.subCategory = subCategory;
@@ -62,8 +56,7 @@ public class Transaction
         this.registrationDate = registrationDate;
     }
 
-    public boolean isStorno(Transaction tran)
-    {
+    public boolean isStorno(Transaction tran){
         return ( (this.getID() != tran.getID()) &&
                 this.getCategory().equals(tran.getCategory()) &&
                 (this.getPayDate().compareTo(tran.getPayDate()) == 0) &&
@@ -75,43 +68,35 @@ public class Transaction
  //                  (this.getIsStorno() == true) && this.getStornoOf() == tran.getStornoOf()));
     }
 
-    public void setID(int ID)
-    {
+    public void setID(int ID) {
         this.ID = ID;
     }
 
-    public int getID()
-    {
+    public int getID() {
         return ID;
     }
 
-    public void setPayDate(Date payDate)
-    {
+    public void setPayDate(Date payDate) {
         this.payDate = payDate;
     }
 
-    public Date getPayDate()
-    {
+    public Date getPayDate() {
         return payDate;
     }
 
-    public void setPrice(double price)
-    {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public double getPrice()
-    {
+    public double getPrice() {
         return price;
     }
 
-    public void setCategory(String category)
-    {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public String getCategory()
-    {
+    public String getCategory() {
         return category;
     }
 
@@ -123,34 +108,28 @@ public class Transaction
         this.subCategory = subCategory;
     }
 
-    public void setShop(String shop)
-    {
+    public void setShop(String shop) {
         this.shop = shop;
     }
 
-    public String getShop()
-    {
+    public String getShop() {
         return shop;
     }
 
 
-    public void setIsStorno(boolean isStorno)
-    {
+    public void setIsStorno(boolean isStorno) {
         this.isStorno = isStorno;
     }
 
-    public boolean getIsStorno()
-    {
+    public boolean getIsStorno() {
         return isStorno;
     }
 
-    public void setStornoOf(int stornoOf)
-    {
+    public void setStornoOf(int stornoOf) {
         this.stornoOf = stornoOf;
     }
 
-    public int getStornoOf()
-    {
+    public int getStornoOf() {
         return stornoOf;
     }
 

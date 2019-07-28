@@ -38,30 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static monthlybudget.apps.danielbrosh.monthlybudget.R.id.monthSpinner;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DB_FILE_NAME;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DB_FOLDER_PATH;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DB_SUFFIX;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DCIM;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DEFAULT_LANGUAGE;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.FILE_NAME;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.IS_AD_ENEABLED;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.IS_MONTH_CHANGABLE;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.LOG_REPORT;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.PROJECT_PATH;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.TRAN_ID_PER_MONTH_NUMERATOR;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.convertStringToDate;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.copyFile;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.dateFormat;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getDateStartMonth;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getSartOfMonth;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getTodayDate;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.reverseDateString;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.setCatPaymentMethodArray;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.setMyBudget;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.shopsSet;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.writeToFile;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.*;
 
 //import android.text.format.DateFormat;
 
@@ -156,7 +133,7 @@ public class MainActivity extends AppCompatActivity
     public void initRefMonthSpinner()
     {
         //global.setCatArrayHebNames();
-        ArrayList<String> allMonths = monthlyBudgetDB.getAllMonthesYearMonth("DESC");//getAllMonthes();
+        ArrayList<String> allMonths = monthlyBudgetDB.getAllMonthsYearMonth("DESC");//getAllMonths();
 
         ArrayAdapter<String> adapter;
         adapter = new ArrayAdapter<String>(this,
@@ -271,7 +248,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if (categoryName.equals(cat.getName()))
                 {
-                    cat.subValRemaining(transactionPrice);
+                    cat.subValBalance(transactionPrice);
                     cat.addTransaction(transaction);
                 }
             }
@@ -407,14 +384,13 @@ public class MainActivity extends AppCompatActivity
         //copyFile(PROJECT_PATH + "/" + DB_FILE_NAME + "." + DB_SUFFIX, DB_FOLDER_PATH);
         monthlyBudgetDB = new myDBAdapter(this);
 
+//        copyFile(DB_FOLDER_PATH + "/" + DB_FILE_NAME + "." + DB_SUFFIX, PROJECT_PATH); // for getting db file
+
         insertTransactionButton = (Button) findViewById(R.id.insertTransactionButton);
         budgetButton = (Button) findViewById(R.id.budgetButton);
         transactionsButton = (Button) findViewById(R.id.transactionsButton);
         createBudgetButton = (Button) findViewById(R.id.createBudgetButton);
         closeMainButton = (Button) findViewById(R.id.closeMainButton);
-
-        if(false)
-            setMyBudget();
 
         if(!monthlyBudgetDB.checkBudgetExists() )
         {
@@ -441,7 +417,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 //Starting a new Intent
                 if (budgetScreen == null)
-                    budgetScreen = new Intent(MainActivity.this, BudgetActivity.class);
+                    budgetScreen = new Intent(getApplicationContext(), BudgetActivity.class);
 
                 //Sending data to another Activity by key[name] and value[something]
                 //nextScreen.putExtra("name", "something");
@@ -456,7 +432,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 //Starting a new Intent
                 if (insertTransactionScreen == null)
-                    insertTransactionScreen = new Intent(MainActivity.this, InsertTransactionActivity.class);
+                    insertTransactionScreen = new Intent(getApplicationContext(), InsertTransactionActivity.class);
                 startActivity(insertTransactionScreen);
 
             }
@@ -468,8 +444,9 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 //Starting a new Intent
                 if (transactionsScreen == null)
-                    transactionsScreen = new Intent(MainActivity.this, TransactionsActivity.class);
-                    startActivity(transactionsScreen);
+                    transactionsScreen = new Intent(getApplicationContext(), TransactionsActivity.class);
+                startActivity(transactionsScreen);
+
             }
         });
 
@@ -479,7 +456,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 //Starting a new Intent
                 if (createBudgetScreen == null)
-                    createBudgetScreen = new Intent(MainActivity.this, Create_Budget_Activity.class);
+                    createBudgetScreen = new Intent(getApplicationContext(), Create_Budget_Activity.class);
                     //initRefMonthSpinner();
                 startActivity(createBudgetScreen);
             }
@@ -555,6 +532,7 @@ public class MainActivity extends AppCompatActivity
 
                 month = new Month(convertStringToDate(refMonth, dateFormat));
                 setTitle(getYearMonth(month.getMonth(), '.'));
+                Date d = getSartOfMonth(getTodayDate());
                 if(month.getMonth().before(getSartOfMonth(getTodayDate())))
                     IS_MONTH_CHANGABLE = false;
                 else

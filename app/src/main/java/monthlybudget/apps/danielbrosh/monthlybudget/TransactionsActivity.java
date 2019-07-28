@@ -24,24 +24,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static monthlybudget.apps.danielbrosh.monthlybudget.MainActivity.month;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.DOWN_ARROW;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.UP_ARROW;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.convertDateToString;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.dateFormat;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getSentenceCapitalLetter;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.isFirstTime;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.reverseLinearLayout;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.setHeaderProperties;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.sort;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.strikeThroughText;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.*;
 
 public class TransactionsActivity extends AppCompatActivity {
 
     LinearLayout ll;
     Spinner categoriesSpinner;
-    ArrayList<TextView []> textViews = new ArrayList();
+    ArrayList<TextView []> textViews = new ArrayList<TextView []>();
 
     int widthDisplay;
 

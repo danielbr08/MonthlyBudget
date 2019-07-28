@@ -140,7 +140,7 @@ public class myDBAdapter {
         for (Budget bgt:newBudgets)
         {
             int categoryID = monthlyBudgetDB.getCategoryId(bgt.getCategory());
-            int subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID,bgt.getCategorySon());
+            int subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID,bgt.getSubCategory());
             int budget = bgt.getValue();
             int balance = bgt.getValue();
 
@@ -265,7 +265,7 @@ public class myDBAdapter {
             String strRefMonth = wrapStrForDb(reverseDateString(convertDateToString(month.getMonth(),dateFormat),"/"));
 
             String setBalanceMB = "UPDATE " + myhelper.MONTHLY_BUDGET_TABLE +
-                    " SET " + myDbHelper.monthlyBudgetBalance + " = " + String.valueOf(cat.getRamainingValue() ) +
+                    " SET " + myDbHelper.monthlyBudgetBalance + " = " + String.valueOf(cat.getBudgetValue() ) +
                     " WHERE " + myDbHelper.monthlyBudgetRefMonth + " = " + strRefMonth +
                     " AND " + myDbHelper.monthlyBudgetCategoryID + " = " + categoryId +
                     " AND " + myDbHelper.monthlyBudgetSubCategoryID + " = " + subCategoryId +
@@ -311,14 +311,14 @@ public class myDBAdapter {
         return allShops;
     }
 
-    public ArrayList<String> getAllMonthesYearMonth(String ascOrDesc)
+    public ArrayList<String> getAllMonthsYearMonth(String ascOrDesc)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
-        String distinctMonthesMB = "SELECT DISTINCT " + myDbHelper.monthlyBudgetRefMonth + " FROM " + myhelper.MONTHLY_BUDGET_TABLE + " ORDER BY " + myDbHelper.monthlyBudgetRefMonth + " " + ascOrDesc;
-        Cursor cursor = db.rawQuery( distinctMonthesMB, null);
+        String distinctMonthsMB = "SELECT DISTINCT " + myDbHelper.monthlyBudgetRefMonth + " FROM " + myhelper.MONTHLY_BUDGET_TABLE + " ORDER BY " + myDbHelper.monthlyBudgetRefMonth + " " + ascOrDesc;
+        Cursor cursor = db.rawQuery( distinctMonthsMB, null);
         long status = 0;
         boolean isErrorOccurred = false;
-        ArrayList<String> allMonthes = new ArrayList<>();
+        ArrayList<String> allMonths = new ArrayList<>();
 
         if(cursor.moveToFirst())
         {
@@ -327,20 +327,20 @@ public class myDBAdapter {
                 refernceMonthStr = reverseDateString(refernceMonthStr.replace("'",""),"/");
                 Date referenceDate = convertStringToDate(refernceMonthStr,dateFormat);
                 String yearMonthStr = getYearMonth(referenceDate,'.');
-                allMonthes.add(yearMonthStr);
+                allMonths.add(yearMonthStr);
             }
             while (cursor.moveToNext());
             cursor.close();
         }
         else
         {
-            LOG_REPORT.add("No data found in getAllMonthesYearMonth method." + "\n");
+            LOG_REPORT.add("No data found in getAllMonthsYearMonth method." + "\n");
             status = -1;
             isErrorOccurred = true;
         }
 
         if(!isErrorOccurred)
-            return allMonthes;
+            return allMonths;
         return null;
     }
 
@@ -668,10 +668,10 @@ public class myDBAdapter {
             {
                 String id = cursor.getString(cursor.getColumnIndex(myDbHelper.monthlyBudgetRefMonth));
                 String categoryName = cursor.getString(cursor.getColumnIndex(myDbHelper.monthlyBudgetSubCategoryID));
-                String categorySonName = cursor.getString(cursor.getColumnIndex(myDbHelper.monthlyBudget));
+                String subCategoryName = cursor.getString(cursor.getColumnIndex(myDbHelper.monthlyBudget));
                 double budget = cursor.getInt(cursor.getColumnIndex(myDbHelper.monthlyBudgetBalance));
 
-                buffer.append(id + SEPARATOR + categoryName + SEPARATOR + categorySonName + budget + "\n");
+                buffer.append(id + SEPARATOR + categoryName + SEPARATOR + subCategoryName + budget + "\n");
             }
             cursor.close();
         }

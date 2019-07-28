@@ -5,15 +5,10 @@ import java.util.List;
 
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
 
-/**
- * Created by daniel.brosh on 7/13/2017.
- */
-
-public class Category
-{
+public class Category {
     private String name;
     private String subCategoryName;
-    private double remaining;
+    private double balance;
     private int budget;
     private ArrayList<Transaction> transactions;
 
@@ -21,71 +16,56 @@ public class Category
         this.transactions = transactions;
     }
 
-    public Category(String name, String subCategoryName)
-    {
+    public Category(String name, String subCategoryName) {
         this.name = name;
         this.subCategoryName = subCategoryName;
-        this.remaining = 0;
+        this.balance = 0;
         this.budget = 0;
     }
 
-    public Category(String name)
-    {
+    public Category(String name) {
         this.name = name;
         this.subCategoryName = LANGUAGE.subCategoryName;
-        this.remaining = 0;
+        this.balance = 0;
         this.budget = 0;
     }
 
-    public Category(String name, int budget, double remaining, List<Transaction> transactions)
-    {
+    public Category(String name, int budget, double balance, List<Transaction> transactions) {
         this.name = name;
         this.subCategoryName = LANGUAGE.subCategoryName;//need to complete this part
-        this.remaining = remaining;
+        this.balance = balance;
         this.budget = budget;
         this.transactions = new ArrayList<Transaction>();
         if( transactions != null && transactions.size() > 0)
-        {
             for (Transaction tran : transactions)
-            {
                 this.transactions.add(tran);
-            }
-        }
     }
 
-    public Category(String name,String subCategoryName, int budget, double remaining, List<Transaction> transactions)
-    {
+    public Category(String name,String subCategoryName, int budget, double balance, List<Transaction> transactions) {
         this.name = name;
         this.subCategoryName = subCategoryName;
-        this.remaining = remaining;
+        this.balance = balance;
         this.budget = budget;
         this.transactions = new ArrayList<Transaction>();
         if( transactions != null && transactions.size() > 0)
-        {
             for (Transaction tran : transactions)
-            {
                 this.transactions.add(tran);
-            }
-        }
     }
 
-    public void setBudgetValue(int budget)
-    {
+    public void setBudgetValue(int budget) {
         this.budget = budget;
     }
 
-    public void setRemainingValue(double remaining)
-    {
-        this.remaining = remaining;
+    public void setBalanceValue(double balance) {
+        this.balance = balance;
     }
 
-    public void subValRemaining(double valToSub)
+    public void subValBalance(double valToSub)
     {
-        remaining -= valToSub;
+        balance -= valToSub;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
@@ -93,23 +73,19 @@ public class Category
         return subCategoryName;
     }
 
-    public double getRamainingValue()
-{
-    return remaining;
-}
+    public double getBalanceValue() {
+        return balance;
+    }
 
-    public int getBudgetValue()
-    {
+    public int getBudgetValue() {
         return budget;
     }
 
-    public ArrayList<Transaction>  getTransactions()
-    {
+    public ArrayList<Transaction>  getTransactions() {
         return this.transactions;
     }
 
-    public void addTransaction(Transaction transaction)
-    {
+    public void addTransaction(Transaction transaction) {
         this.transactions.add(transaction);
     }
 

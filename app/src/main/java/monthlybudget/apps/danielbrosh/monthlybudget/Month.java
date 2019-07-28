@@ -20,16 +20,7 @@ import java.util.TreeSet;
 
 import static monthlybudget.apps.danielbrosh.monthlybudget.MainActivity.month;
 import static monthlybudget.apps.danielbrosh.monthlybudget.MainActivity.monthlyBudgetDB;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.FILE_NAME;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.PROJECT_PATH;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.SUFFIX;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.TRAN_ID_PER_MONTH_NUMERATOR;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.convertStringToDate;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.dateFormat;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getAllMonthes;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
-import static monthlybudget.apps.danielbrosh.monthlybudget.global.reverseDateString;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.*;
 
 /**
  * Created by daniel.brosh on 10/1/2017.
@@ -197,19 +188,19 @@ public class Month
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<Month> getAllMonthesObj()
+    public ArrayList<Month> getAllMonthsObj()
     {
-        ArrayList<Month> allMonthes = new ArrayList<>();
-        for (String refMonth: getAllMonthes())
+        ArrayList<Month> allMonths = new ArrayList<>();
+        for (String refMonth: getAllMonths())
         {
             refMonth = (refMonth + ".01");
             refMonth = reverseDateString(refMonth, "\\.");
             refMonth = refMonth.replace('.', '/');
             // Close the current month by writing to files+
 
-            allMonthes.add(new Month(convertStringToDate(refMonth, dateFormat)));
+            allMonths.add(new Month(convertStringToDate(refMonth, dateFormat)));
         }
-        return allMonthes;
+        return allMonths;
     }
 
     public void setTransactions(String catName)
@@ -238,7 +229,7 @@ public class Month
      Output: A List of all the categories from the main file(category including all her transactions)   *//*
     public ArrayList<Category> getCategoriesFromFile(String categoriesSeperator, String transactionsSeparator)
     {
-        String filePath = dirPath + "/" + FILE_NAME + "." + SUFFIX;
+        String filePath = dirPath + "/" + FILE_NAME + "." + TXT_SUFFIX;
         ArrayList<String> categoriesLines = readLinesFromFile(filePath);
         ArrayList<Category>  Categories = new ArrayList<Category>();
         transactions.clear();
@@ -249,9 +240,9 @@ public class Month
             String [] splitterLine = line.split(categoriesSeperator);
             String categoryName = splitterLine[0];
             int budget = Integer.valueOf(splitterLine[1]);
-            double remaining = Double.valueOf(splitterLine[2]);
-            ArrayList<Transaction> categoryTransactions = getTransactionsFromFile(dirPath + "/Transactions/" + categoryName + "." + SUFFIX ,transactionsSeparator);
-            Categories.add(new Category(categoryName,budget,remaining,categoryTransactions));
+            double balance = Double.valueOf(splitterLine[2]);
+            ArrayList<Transaction> categoryTransactions = getTransactionsFromFile(dirPath + "/Transactions/" + categoryName + "." + TXT_SUFFIX ,transactionsSeparator);
+            Categories.add(new Category(categoryName,budget,balance,categoryTransactions));
             if(categoryTransactions != null && categoryTransactions.size() > 0)
                 transactions.addAll(categoryTransactions);
         }
@@ -343,9 +334,9 @@ public class Month
         {
             String categoryName = category.getName();
             // String categoryHebName = getCategoryHebName(categoryName);
-            String remaining = String.valueOf(category.getRamainingValue());
+            String balance = String.valueOf(category.getBalanceValue());
             String budget = String.valueOf(category.getBudgetValue());
-            lines.add(categoryName + categoriesSeparator + budget + categoriesSeparator + remaining);
+            lines.add(categoryName + categoriesSeparator + budget + categoriesSeparator + balance);
             ArrayList<Transaction> catTrans = category.getTransactions();
             if(catTrans.size() > 0 )
                 writeTransactions(transactionsDirPath, categoryName, catTrans , transactionsSeparator);
@@ -377,7 +368,7 @@ public class Month
 /*    @RequiresApi(api = Build.VERSION_CODES.O)
     public void readFromFile()
     {
-        final File filePath = new File(dirPath + "/" + FILE_NAME + "." + SUFFIX);
+        final File filePath = new File(dirPath + "/" + FILE_NAME + "." + TXT_SUFFIX);
 
         if(!filePath.exists())
             copyOriginalFile(dirPath);
@@ -396,7 +387,7 @@ public class Month
     {
         File src = new File(sourceFilePath);
         File destDir = new File(destinationtDirPath);
-        File destFile = new File(destinationtDirPath + "/" + FILE_NAME + "." + SUFFIX);
+        File destFile = new File(destinationtDirPath + "/" + FILE_NAME + "." + TXT_SUFFIX);
         try {
             // make sure the target file exists
             if (src.exists())

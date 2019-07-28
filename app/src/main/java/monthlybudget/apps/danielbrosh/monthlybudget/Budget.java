@@ -9,20 +9,9 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
  */
 
 public class Budget {
-    public String getCategory() {
-        return category;
-    }
-
-    public String getCategorySon() {
-        return categorySon;
-    }
-
-    public int getValue() {
-        return value;
-    }
 
     private String category;
-    private String categorySon;
+    private String subCategory;
     private int value;
     private boolean isConstPayment;
     private String shop;
@@ -36,41 +25,50 @@ public class Budget {
         this.shop = shop;
         this.chargeDay = chargeDay;
         this.catPriority = catPriority;
-
-        if(categorySon == null || categorySon.equals(""))
-            this.categorySon = LANGUAGE.subCategoryName;
     }
 
-    public Budget(int catPriority,String category, String categorySon, int value, boolean isConstPayment, String shop, int chargeDay) {
+    public Budget(int catPriority,String category, String subCategory, int value, boolean isConstPayment, String shop, int chargeDay) {
         this.category = category;
-        this.categorySon = categorySon;
+        this.subCategory = subCategory;
         this.value = value;
         this.isConstPayment = isConstPayment;
         this.shop = shop;
         this.chargeDay = chargeDay;
         this.catPriority = catPriority;
 
-        if(categorySon == null || categorySon.equals(""))
-            this.categorySon = LANGUAGE.subCategoryName;
+        if(subCategory == null || subCategory.equals(""))
+            this.subCategory = LANGUAGE.subCategoryName;
     }
 
-    public boolean equals(Object object2) {
-        return object2 instanceof Budget
-                && category.equals(((Budget)object2).category)
-                && categorySon.equals(((Budget)object2).categorySon)
-                && value ==((Budget)object2).value
-                && isConstPayment ==((Budget)object2).isConstPayment
-                && ((shop == ((Budget)object2).shop)//null
-                     || shop != null && shop.equals(((Budget)object2).shop))
-                && chargeDay ==((Budget)object2).chargeDay;
+    public String getCategory() {
+        return category;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public boolean equals(Object budget) {
+        return budget instanceof Budget
+                && category.equals(((Budget)budget).category)
+                && subCategory.equals(((Budget)budget).subCategory)
+                && value ==((Budget)budget).value
+                && isConstPayment ==((Budget)budget).isConstPayment
+                && ((shop == ((Budget)budget).shop)//null
+                     || shop != null && shop.equals(((Budget)budget).shop))
+                && chargeDay ==((Budget)budget).chargeDay;
     }
 
     public void setCategory(String category) {
         this.category = category;
     }
 
-    public void setCategorySon(String categorySon) {
-        this.categorySon = categorySon;
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
     public void setValue(int value) {

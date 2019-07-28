@@ -292,7 +292,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
 
 
             allCategories.add(category);
-            //String categorySon = ((EditText)((LinearLayout)LLMain.getChildAt(i)).getChildAt(1)).getText().toString();
+            //String subCategory = ((EditText)((LinearLayout)LLMain.getChildAt(i)).getChildAt(1)).getText().toString();
             verifyBudgetInput(categoryET, valueET, constPaymentCB, shopET, chargeDaySP);// chargeDayET);
             if (isInputValid)
                 allBudgets.add(new Budget(priorityCat++,category,value,constPayment,shop,chargeDay));
@@ -468,10 +468,10 @@ public class Create_Budget_Activity extends AppCompatActivity {
                 status = monthlyBudgetDB.insertCategoryData(bgt.getCategory());
                 categoryID = monthlyBudgetDB.getCategoryId(bgt.getCategory());
             }
-            subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID,bgt.getCategorySon());
+            subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID,bgt.getSubCategory());
             if(subCategoryID == -1) {
-                status = monthlyBudgetDB.insertSubCategoryData(categoryID, bgt.getCategorySon());
-                subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID, bgt.getCategorySon());
+                status = monthlyBudgetDB.insertSubCategoryData(categoryID, bgt.getSubCategory());
+                subCategoryID = monthlyBudgetDB.getSubCategoryId(categoryID, bgt.getSubCategory());
             }
             int catPriority = bgt.getCatPriority();
             status = monthlyBudgetDB.insertBudgetTableData(budgetNumber, categoryID, subCategoryID,catPriority, bgt.getValue(), bgt.isConstPayment(), bgt.getShop(), bgt.getChargeDay());
@@ -708,7 +708,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
     public void add_New_row(String categoryName, int categoryValue, boolean isConstPayment, String shop, int chargeDay ) {
         boolean isEmptyRow = (categoryName == null && categoryValue == 0 && isConstPayment == false && shop == null && chargeDay == 0);
         final LinearLayout newll = new LinearLayout(Create_Budget_Activity.this);
-        final EditText categoryNameET, categoryValueET;
+        EditText categoryNameET, categoryValueET;
         final EditText shopET;
         //final EditText chargeDayET;
         final Spinner optionalDaysSpinner;
