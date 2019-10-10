@@ -291,7 +291,7 @@ public class myDBAdapter {
         Cursor cursor = db.rawQuery( distinctShops, null);
         long status = 0;
         boolean isErrorOccurred = false;
-        ArrayList<String> allShops = new ArrayList<>();
+        ArrayList<String> allShops = new ArrayList<String>();
 
         if(cursor.moveToFirst())
         {
@@ -318,7 +318,7 @@ public class myDBAdapter {
         Cursor cursor = db.rawQuery( distinctMonthsMB, null);
         long status = 0;
         boolean isErrorOccurred = false;
-        ArrayList<String> allMonths = new ArrayList<>();
+        ArrayList<String> allMonths = new ArrayList<String>();
 
         if(cursor.moveToFirst())
         {
@@ -348,7 +348,7 @@ public class myDBAdapter {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         long status = 0;
         boolean isErrorOccurred = false;
-        ArrayList<Budget> allBudget =  new ArrayList<>();
+        ArrayList<Budget> allBudget =  new ArrayList<Budget>();
 
         String selectBudgetData = "SELECT " + myDbHelper.budgetCategoryID + "," + myDbHelper.budgetSubCategoryID + "," + myDbHelper.budgetCatPriority + "," + myDbHelper.budgetValue + "," + myDbHelper.budgetIsConstPayment + "," + myDbHelper.budgetShop + "," + myDbHelper.budgetChargeDay + " " +
                 "FROM " + myDbHelper.BUDGET_TABLE + " " +
@@ -384,7 +384,7 @@ public class myDBAdapter {
         long status = 0;
         boolean isErrorOccurred = false;
         String wrappedStrRefMonth = wrapStrForDb(reverseDateString(convertDateToString(refMonth,dateFormat),"/"));
-        ArrayList<Category> refMonthCategories =  new ArrayList<>();
+        ArrayList<Category> refMonthCategories =  new ArrayList<Category>();
 
         String selectBudgetData = "SELECT " + myDbHelper.monthlyBudgetCategoryID + "," +
                 myDbHelper.monthlyBudgetSubCategoryID + "," +
@@ -425,7 +425,7 @@ public class myDBAdapter {
 
     public ArrayList<Transaction> getTransactionsRefMonth(String categoryName, Date refMonth)
     {
-        ArrayList<Transaction> categoryTrans = new ArrayList<>();
+        ArrayList<Transaction> categoryTrans = new ArrayList<Transaction>();
         SQLiteDatabase db = myhelper.getWritableDatabase();
         int categoryId = getCategoryIdByName(categoryName);
         String wrappedStrRefMonth = wrapStrForDb(reverseDateString(convertDateToString(refMonth,dateFormat),"/"));

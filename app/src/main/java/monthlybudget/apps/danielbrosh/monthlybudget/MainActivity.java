@@ -8,8 +8,10 @@
 
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +20,8 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -294,7 +296,7 @@ public class MainActivity extends AppCompatActivity
     public void setTitle(String refMonth)
     {
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         TextView tv = new TextView(getApplicationContext());
 
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
@@ -348,10 +350,15 @@ public class MainActivity extends AppCompatActivity
             languageSpinner.setSelection(1, true);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+    }
+
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

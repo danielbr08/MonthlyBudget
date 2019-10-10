@@ -1,12 +1,12 @@
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
-import android.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -109,7 +109,7 @@ public class BudgetActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setTitle(String refMonth) {
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         TextView tv = new TextView(getApplicationContext());
 
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(

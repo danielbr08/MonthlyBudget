@@ -3,12 +3,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+//import android.support.annotation.RequiresApi;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,9 +69,9 @@ public class global {
     public static Language LANGUAGE;
     public static String DEFAULT_LANGUAGE;
     public static boolean IS_AD_ENEABLED = true;
-    public static ArrayList<String> LOG_REPORT = new ArrayList<>();
+    public static ArrayList<String> LOG_REPORT = new ArrayList<String>();
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static void setHeaderProperties(TextView tv) {
         tv.setTypeface(null, Typeface.BOLD);
         tv.setTextColor(Color.BLACK);
@@ -100,7 +102,7 @@ public class global {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static void setLanguageConf(LinearLayout l) {
         for (int i = 0;i < l.getChildCount();i++) {
             View v = l.getChildAt(i);
@@ -202,7 +204,7 @@ public class global {
         String today = convertDateToString(getTodayDate(),dateFormat);
         today  = today.replace('/','.');
         today = today.substring(today.indexOf(".")+ 1);
-        ArrayList<String> allMonths = new ArrayList<>();
+        ArrayList<String> allMonths = new ArrayList<String>();
         //allMonths.add(today);
         File root = new File(global.PROJECT_PATH);
 
@@ -386,7 +388,7 @@ public class global {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public static void copyFile(String sourceFilePath, String destinationtDirPath) {
         File src = new File(sourceFilePath);
         File destDir = new File(destinationtDirPath);

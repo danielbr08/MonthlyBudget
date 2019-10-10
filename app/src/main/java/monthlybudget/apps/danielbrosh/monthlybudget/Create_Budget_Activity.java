@@ -1,7 +1,7 @@
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -69,7 +69,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setTitle() {
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         TextView tv = new TextView(getApplicationContext());
 
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
@@ -516,7 +516,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
     public ArrayList<Budget> getAddedCategories(int budgetNumber)
     {
         ArrayList<Budget> oldBudget = monthlyBudgetDB.getBudgetDataFromDB(budgetNumber);
-        ArrayList<Budget> addedBudgets = new ArrayList<>();
+        ArrayList<Budget> addedBudgets = new ArrayList<Budget>();
         boolean isBudgetExists = false;
         for (Budget bgt:allBudgets)
         {
@@ -551,7 +551,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
     {
         int budgetNumber = monthlyBudgetDB.getMaxBudgetNumberBGT() + 1;
         writeBudget(budgetNumber);
-        ArrayList<Budget> addedBudget = new ArrayList<>();
+        ArrayList<Budget> addedBudget = new ArrayList<Budget>();
         if(!operation.equals("CRT"))
             addedBudget = getAddedCategories(budgetNumber-1);
         if(operation.equals("ADD"))
@@ -598,8 +598,8 @@ public class Create_Budget_Activity extends AppCompatActivity {
         OKButton = new Button(Create_Budget_Activity.this);
         newll = new LinearLayout(Create_Budget_Activity.this);
 
-        allBudgets = new ArrayList<>();
-        allCategories = new ArrayList<>();
+        allBudgets = new ArrayList<Budget>();
+        allCategories = new ArrayList<String>();
         //setAddButton();
         setTitleRow();
         setBudgetGui();
@@ -693,7 +693,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
         if(allBudgets == null || allBudgets.size() == 0)
         {
             add_New_row(null, 0, false, null, 0);
-            allBudgets = new ArrayList<>();
+            allBudgets = new ArrayList<Budget>();
         }
         else
             for(Budget budget:allBudgets)
@@ -708,7 +708,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
     public void add_New_row(String categoryName, int categoryValue, boolean isConstPayment, String shop, int chargeDay ) {
         boolean isEmptyRow = (categoryName == null && categoryValue == 0 && isConstPayment == false && shop == null && chargeDay == 0);
         final LinearLayout newll = new LinearLayout(Create_Budget_Activity.this);
-        EditText categoryNameET, categoryValueET;
+        final EditText categoryNameET, categoryValueET;
         final EditText shopET;
         //final EditText chargeDayET;
         final Spinner optionalDaysSpinner;
@@ -851,7 +851,7 @@ public class Create_Budget_Activity extends AppCompatActivity {
 
         public void setSpinnerOptionalDays(Spinner OptionalDaysSP)
     {
-        ArrayList<String> daysInMonth = new ArrayList<>();
+        ArrayList<String> daysInMonth = new ArrayList<String>();
         int i = 1;
         while(i <= 31 )
             daysInMonth.add(String.valueOf(i++));

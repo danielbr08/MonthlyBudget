@@ -1,7 +1,7 @@
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -92,7 +92,7 @@ public class Month
 
     ArrayList<String> getCategoriesNames()
     {
-        ArrayList<String> categoriesNames = new ArrayList<>();
+        ArrayList<String> categoriesNames = new ArrayList<String>();
         for (Category cat:categories)
         {
             categoriesNames.add(cat.getName());
@@ -190,7 +190,7 @@ public class Month
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<Month> getAllMonthsObj()
     {
-        ArrayList<Month> allMonths = new ArrayList<>();
+        ArrayList<Month> allMonths = new ArrayList<Month>();
         for (String refMonth: getAllMonths())
         {
             refMonth = (refMonth + ".01");
@@ -254,14 +254,14 @@ public class Month
     public ArrayList<Category> getCategoriesFromDB()
     {
         //return null;
-        ArrayList<Category> Categories = new ArrayList<>();
+        ArrayList<Category> Categories = new ArrayList<Category>();
         Categories = monthlyBudgetDB.getMonthlyBudgetDataFromDB(this.refMonth);
         transactions.clear();
         if(Categories == null || Categories.size() == 0)
             return null;
         for (Category cat : Categories)
         {
-            ArrayList<Transaction> categoryTransactions = new ArrayList<>();
+            ArrayList<Transaction> categoryTransactions = new ArrayList<Transaction>();
             //categoryTransactions = getTransactionsRefMonth(cat.getName(), this.refMonth);
             categoryTransactions = cat.getTransactions();
             cat.setTransactions(categoryTransactions);

@@ -1,7 +1,7 @@
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,9 +10,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -55,7 +55,7 @@ public class InsertTransactionActivity extends AppCompatActivity
     public void setTitle(String refMonth)
     {
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         TextView tv = new TextView(getApplicationContext());
 
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(

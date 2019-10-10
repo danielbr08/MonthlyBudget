@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "774126336039",
+    "firebase_url": "https://monthlybudget-d0c41.firebaseio.com",
+    "project_id": "monthlybudget-d0c41",
+    "storage_bucket": "monthlybudget-d0c41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774126336039:android:2ee6c03416490f00b77602",
+        "android_client_info": {
+          "package_name": "monthlybudget.apps.danielbrosh.monthlybudget"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774126336039-tv1ikm93pcmp4j78rtagrk6gn0av1hlh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "monthlybudget.apps.danielbrosh.monthlybudget",
+            "certificate_hash": "fb4052e293b9ab8a06eb6deadb8c90475626db73"
+          }
+        },
+        {
+          "client_id": "774126336039-v0mijd23sp0sf2q2o7le5ouoq6rnj2mg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgxI85CgvZr1htamgvzKn6lGXzQXPu6c4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774126336039-v0mijd23sp0sf2q2o7le5ouoq6rnj2mg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
