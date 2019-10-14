@@ -6,8 +6,7 @@
   ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
   ~ Vestibulum commodo. Ut rhoncus gravida arcu.
   -->
-
-<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -96,4 +95,4 @@
             android:text="סגור"
             android:textSize="30sp" />
     </LinearLayout>
-</androidx.constraintlayout.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
