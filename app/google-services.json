@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "774126336039-f54qv1fordj24q7qgtsj2l5aha1jgjge.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "monthlybudget.apps.danielbrosh.monthlybudget",
+            "certificate_hash": "34a5b81a274f748346e3730431f0c6224cd12231"
+          }
+        },
+        {
           "client_id": "774126336039-tv1ikm93pcmp4j78rtagrk6gn0av1hlh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

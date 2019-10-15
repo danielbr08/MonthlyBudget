@@ -265,7 +265,7 @@ public class myDBAdapter {
             String strRefMonth = wrapStrForDb(reverseDateString(convertDateToString(month.getMonth(),dateFormat),"/"));
 
             String setBalanceMB = "UPDATE " + myhelper.MONTHLY_BUDGET_TABLE +
-                    " SET " + myDbHelper.monthlyBudgetBalance + " = " + String.valueOf(cat.getBudgetValue() ) +
+                    " SET " + myDbHelper.monthlyBudgetBalance + " = " + String.valueOf(cat.getBalanceValue() ) +
                     " WHERE " + myDbHelper.monthlyBudgetRefMonth + " = " + strRefMonth +
                     " AND " + myDbHelper.monthlyBudgetCategoryID + " = " + categoryId +
                     " AND " + myDbHelper.monthlyBudgetSubCategoryID + " = " + subCategoryId +

@@ -18,7 +18,7 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.MainActivity.month;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
 
-public class BudgetActivity extends AppCompatActivity {
+public class  BudgetActivity extends AppCompatActivity {
     LinearLayout ll;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -43,15 +43,15 @@ public class BudgetActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void addCategoryRow(String categoryName, String Budget, String balance, boolean isExceptionFromBudget){//Bundle savedInstanceState)
+    public void addCategoryRow(String categoryName, String budget, String balance, boolean isExceptionFromBudget){//Bundle savedInstanceState)
         TextView categoryNameTV = new TextView(BudgetActivity.this);
         TextView budgetTV= new TextView(BudgetActivity.this);
         TextView balanceTV = new TextView(BudgetActivity.this);
         LinearLayout newll = new LinearLayout(BudgetActivity.this);
 
         categoryNameTV.setText(categoryName);
-        budgetTV.setText(balance);
-        balanceTV.setText(Budget);
+        budgetTV.setText(budget);
+        balanceTV.setText(balance);
 
         setDirections(categoryNameTV,budgetTV,balanceTV);
         setAlignments(categoryNameTV,budgetTV,balanceTV);
@@ -192,7 +192,7 @@ public class BudgetActivity extends AppCompatActivity {
         balanceTV.setText(LANGUAGE.balanceName);
 
         llBudgetTitle.removeAllViews();
-        addViewsLL(llBudgetTitle,categoryTV,budgetTV,balanceTV);
+        //addViewsLL(llBudgetTitle,categoryTV,budgetTV,balanceTV);
 
         if(LANGUAGE.language.equals("HEB"))
             addViewsLL(llBudgetTitle,categoryTV,budgetTV,balanceTV);

@@ -362,8 +362,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final SharedPreferences  sharedpreference = this.getSharedPreferences(
-                "monthlybudget.apps.danielbrosh.monthlybudget", Context.MODE_PRIVATE);
+        final SharedPreferences sharedpreference = this.getSharedPreferences(
+                preferencePath, Context.MODE_PRIVATE);
         //sharedpreference= PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         DEFAULT_LANGUAGE = sharedpreference.getString("default_language","EN");
         IS_AD_ENEABLED = sharedpreference.getBoolean("isAdEnable",true);

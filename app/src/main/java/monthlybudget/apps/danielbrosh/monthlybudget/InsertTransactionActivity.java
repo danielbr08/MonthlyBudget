@@ -1,5 +1,6 @@
 package monthlybudget.apps.danielbrosh.monthlybudget;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import androidx.appcompat.app.ActionBar;
 import android.app.DatePickerDialog;
@@ -35,16 +36,17 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.R.id.paymentMethodSpi
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.IS_AD_ENEABLED;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.TRAN_ID_PER_MONTH_NUMERATOR;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.catPaymentMethodArray;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.dateFormat;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getSentenceCapitalLetter;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.preferencePath;
+import static monthlybudget.apps.danielbrosh.monthlybudget.global.setCatPaymentMethodArray;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.shopsSet;
 
 public class InsertTransactionActivity extends AppCompatActivity
 {
-    final SharedPreferences sharedpreference = this.getSharedPreferences(
-            preferencePath, Context.MODE_PRIVATE);
+    SharedPreferences sharedpreference;// = this.getSharedPreferences(preferencePath, Context.MODE_PRIVATE);
     Spinner categoriesSpinner;
     Spinner paymentTypeSpinner;
     Button btnSendTransaction;
@@ -74,7 +76,7 @@ public class InsertTransactionActivity extends AppCompatActivity
         ab.setDisplayShowTitleEnabled(false); //hide the default title
     }
 
-    public void setSpinnersAllignment()
+    public void setSpinnersAlignment()
     {
         ArrayAdapter<String> adapter = null;
         if(LANGUAGE.language.equals("EN"))
@@ -84,13 +86,20 @@ public class InsertTransactionActivity extends AppCompatActivity
             adapter = new ArrayAdapter<String>(this,
                     R.layout.custom_spinner, month.getCategoriesNames());
         categoriesSpinner.setAdapter(adapter);
+
+        if(LANGUAGE.language.equals("EN"))
+            adapter = new ArrayAdapter<String>(this,
+                    R.layout.custom_spinner_eng, catPaymentMethodArray);
+        else if(LANGUAGE.language.equals("HEB"))
+            adapter = new ArrayAdapter<String>(this,
+                    R.layout.custom_spinner, catPaymentMethodArray);
         paymentTypeSpinner.setAdapter(adapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void init()
     {
-        setSpinnersAllignment();
+        setSpinnersAlignment();
 
         if(shopsSet.size() == 0) {
             ArrayList<String> shops = monthlyBudgetDB.getAllShops();
@@ -122,6 +131,7 @@ public class InsertTransactionActivity extends AppCompatActivity
         return (day + "/" + month + "/" +  mYear);
     }
 
+    @SuppressLint("WrongConstant")
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setButtonsNames()
     {
@@ -205,6 +215,7 @@ public class InsertTransactionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_transaction);
 
+        sharedpreference = this.getSharedPreferences(preferencePath, Context.MODE_PRIVATE);
         //sharedpreference= PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
         setButtonsNames();
         setTitle( getYearMonth(month.getMonth(),'.'));
