@@ -8,6 +8,21 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
  */
 
 public class Transaction{
+    public Date getRefMonth() {
+        return refMonth;
+    }
+
+    public String getTrnID() {
+        return trnID;
+    }
+
+    public void setTrnID(String trnID) {
+        this.trnID = trnID;
+    }
+
+    private String trnID;
+
+    private Date refMonth;
     private int ID;//Per month
     private String category;
     private String subCategory;
@@ -19,7 +34,8 @@ public class Transaction{
     private boolean isStorno;
     private int stornoOf;
 
-    public Transaction(int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate) {
+    public Transaction(Date refMonth, int ID, String category, String paymentMethod, String shop, Date payDate, double price, Date registrationDate) {
+        this.refMonth = refMonth;
         this.ID = ID;
         this.category = category;
         this.subCategory = LANGUAGE.subCategory;
@@ -43,7 +59,8 @@ public class Transaction{
 //        this.registrationDate = registrationDate;
 //    }
 
-    public Transaction( int ID, String category, String subCategory, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf) {
+    public Transaction(Date refMonth, int ID, String category, String subCategory, String paymentMethod, String shop, Date payDate, double price, Date registrationDate, boolean isStorno, int stornoOf) {
+        this.refMonth = refMonth;
         this.ID = ID;
         this.category = category;
         this.subCategory = subCategory;

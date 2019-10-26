@@ -27,18 +27,146 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.getYearMonth;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.reverseDateString;
 import static monthlybudget.apps.danielbrosh.monthlybudget.global.wrapStrForDb;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 /**
  * Created by daniel.brosh on 3/26/2018.
  */
 public class myDBAdapter {
     myDbHelper myhelper;
+    DatabaseReference budgetDB;
+    DatabaseReference mbDB;
+    DatabaseReference transactionDB;
+    DatabaseReference categoryDB;
+    DatabaseReference subCategoryDB;
 
-    public myDBAdapter(Context context) {
+    final ArrayList<Budget> budgetDBData = new ArrayList<Budget>();
+    final ArrayList<Transaction> transactionDBData = new ArrayList<Transaction>();
+    final ArrayList<MB> monthlyBudgetDBData = new ArrayList<MB>();
+//        final ArrayList<Budget> ab = new ArrayList<Budget>();
+//        final ArrayList<Budget> ab = new ArrayList<Budget>();
+//        final ArrayList<Budget> ab = new ArrayList<Budget>();
+
+
+    public void setBudgetDBData(){
+        budgetDB.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot myDataSnapshot : dataSnapshot.getChildren())
+                {
+                    String id = myDataSnapshot.child("id").getValue().toString();
+                    long budgetNumber = Long.valueOf(myDataSnapshot.child("budgetNumber").getValue().toString());
+                    int catPriority = Integer.valueOf(myDataSnapshot.child("catPriority").getValue().toString());
+                    String category = myDataSnapshot.child("category").getValue().toString();
+                    String subCategory = myDataSnapshot.child("subCategory").getValue().toString();
+                    int chargeDay = Integer.valueOf(myDataSnapshot.child("chargeDay").getValue().toString());
+                    boolean constPayment = Boolean.valueOf(myDataSnapshot.child("constPayment").getValue().toString());
+                    int value = Integer.valueOf(myDataSnapshot.child("value").getValue().toString());
+
+                    //Budget bgt = myDataSnapshot.getValue(Budget.class);
+                    Budget bgt = new Budget(id,budgetNumber,catPriority,category,subCategory,value,constPayment,"",chargeDay);
+
+                }
+            }
+            public void onCancelled(DatabaseError firebaseError) {
+
+            }
+
+        });
+    }
+
+    public void setTransactionDBData(){
+        transactionDB.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot myDataSnapshot : dataSnapshot.getChildren())
+                {
+
+                    //String trnID = myDataSnapshot.child("trnID").getValue().toString();
+                    int id = Integer.valueOf(myDataSnapshot.child("id").getValue().toString());
+                    String paymentMethod = myDataSnapshot.child("paymentMethod").getValue().toString();
+                    String category = myDataSnapshot.child("category").getValue().toString();
+                    String subCategory = myDataSnapshot.child("subCategory").getValue().toString();
+                    String shop = myDataSnapshot.child("shop").getValue().toString();
+
+                    //int price = Integer.valueOf(myDataSnapshot.child("value").getValue().toString());
+                    Date refMonth = (Date)myDataSnapshot.child("refMonth").getValue(Date.class);
+                    Date payDate = (Date)myDataSnapshot.child("payDate").getValue(Date.class);
+                    double price = Double.valueOf(myDataSnapshot.child("price").getValue().toString());
+                    Date registrationDate = (Date)myDataSnapshot.child("registrationDate").getValue(Date.class);
+                    boolean isStorno = Boolean.valueOf(myDataSnapshot.child("isStorno").getValue().toString());
+                    int stornoOf = Integer.valueOf(myDataSnapshot.child("stornoOf").getValue().toString());
+
+                    //Budget bgt = myDataSnapshot.getValue(Budget.class);
+
+
+                    Transaction transaction = new Transaction(refMonth, id, category, subCategory, paymentMethod, shop, payDate, price, registrationDate, isStorno, stornoOf);
+                    //transaction.setTrnID(trnID);
+                    transactionDBData.add(transaction);
+                }
+            }
+            public void onCancelled(DatabaseError firebaseError) {
+
+            }
+
+        });
+    }
+
+    public void setMonthlyBudgetDBData(){
+        mbDB.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot myDataSnapshot : dataSnapshot.getChildren())
+                {
+
+                    int budgetCategoryID = Integer.valueOf(myDataSnapshot.child("budgetCategoryID").getValue().toString());
+                    int budgetSubCategoryID = Integer.valueOf(myDataSnapshot.child("budgetSubCategoryID").getValue().toString());
+                    int budget = Integer.valueOf(myDataSnapshot.child("monthlyBudget").getValue().toString());
+                    double balance = Double.valueOf(myDataSnapshot.child("monthlyBudgetBalance").getValue().toString());
+                    int budgetNumber = Integer.valueOf(myDataSnapshot.child("monthlyBudgetNumber").getValue().toString());
+                    Date refMonth = (Date)myDataSnapshot.child("monthlyBudgetRefMonth").getValue(Date.class);
+
+                    //Budget bgt = myDataSnapshot.getValue(Budget.class);
+
+                    MB mb = new MB(refMonth, budgetCategoryID, budgetSubCategoryID, budgetNumber, budget, balance);
+                    //transaction.setTrnID(trnID);
+                    monthlyBudgetDBData.add(mb);
+                }
+            }
+            public void onCancelled(DatabaseError firebaseError) {
+
+            }
+
+        });
+    }
+
+    public myDBAdapter(Context context)
+    {
         myhelper = new myDbHelper(context);
+        budgetDB = FirebaseDatabase.getInstance().getReference("budget");
+        mbDB = FirebaseDatabase.getInstance().getReference("monthly_budget");
+        transactionDB = FirebaseDatabase.getInstance().getReference("transaction");
+        categoryDB = FirebaseDatabase.getInstance().getReference("category");
+        subCategoryDB = FirebaseDatabase.getInstance().getReference("subCategoryDB");
+
+        setBudgetDBData();
+        setTransactionDBData();
+        setMonthlyBudgetDBData();
     }
 
     public int getMaxIDPerMonthTRN(Date refMonth)
     {
+
         String wrappedRefMonth = wrapStrForDb(reverseDateString(convertDateToString(refMonth,dateFormat),"/"));
         SQLiteDatabase db = myhelper.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" +  myDbHelper.transIDPerMonth + ") " +
@@ -70,6 +198,8 @@ public class myDBAdapter {
 
     public int getMaxBudgetNumberBGT()
     {
+
+
         SQLiteDatabase db = myhelper.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" +  myDbHelper.budgetNumber + ") FROM " + myhelper.BUDGET_TABLE , null);
         if (c.moveToFirst())
@@ -461,7 +591,7 @@ public class myDBAdapter {
 
                 if(MaxID < IDPerMonth )
                     MaxID = IDPerMonth;
-                categoryTrans.add(new Transaction( IDPerMonth, categoryName, subCategoryName, paymentMethod, shop, dPayDate, price, dRegistrationDate, isStorno, stornoOf));
+                categoryTrans.add(new Transaction(refMonth, IDPerMonth, categoryName, subCategoryName, paymentMethod, shop, dPayDate, price, dRegistrationDate, isStorno, stornoOf));
             }
             while (cursor.moveToNext());
         }
@@ -511,6 +641,13 @@ public class myDBAdapter {
         id = db.insert(myhelper.BUDGET_TABLE, null, contentValues);
         if(id == -1)
             LOG_REPORT.add("Insertion failed in insertBudgetTableData method. budget number: " + budgetNumber + ", budget category ID: " + budgetCategoryID + "\n");
+
+        String objId = budgetDB.push().getKey();
+
+        Budget budget = new Budget(objId, budgetNumber, catPriority,String.valueOf(budgetCategoryID), String.valueOf(budgetSubCategoryID), budgetValue, budgetIsConstPayment, budgetShop, budgetChargeDay);
+
+        budgetDB.child(objId).setValue(budget);
+
         return id;
     }
 
@@ -532,6 +669,11 @@ public class myDBAdapter {
         id = db.insert(myhelper.MONTHLY_BUDGET_TABLE, null, contentValues);
         if(id == -1)
             LOG_REPORT.add("Insertion failed in insertMonthlyBudgetData method. ref month: " + strRefMonth + ", budget category ID: " + budgetCategoryID + "\n");
+
+        String objId = mbDB.push().getKey();
+        MB mb = new MB( monthlyBudgetRefMonth, budgetCategoryID, budgetSubCategoryID, monthlyBudgetNumber, monthlyBudget, monthlyBudgetBalance);
+        mbDB.child(objId).setValue(mb);
+
         return id;
     }
 
@@ -570,16 +712,25 @@ public class myDBAdapter {
         id = db.insert(myhelper.TRANSACTION_TABLE, null, contentValues);
         if(id == -1)
             LOG_REPORT.add("Insertion failed in insertTransactionData method. ref month: " + wrappedRefMonth + ", transaction ID per month: " + transIDPerMonth + ", transaction category ID: " + transCategoryID + ", trans shop: " + transShop +"\n");
+
+        String objId = transactionDB.push().getKey();
+        transactionDB.child(objId).setValue(tran);
         return id;
     }
 
-    public long insertCategoryData(String CategoryName)
+    public long insertCategoryData(String categoryName)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         long id = 0;
-        contentValues.put(myDbHelper.categoryName, CategoryName);
+        contentValues.put(myDbHelper.categoryName, categoryName);
         id = db.insert(myhelper.CATEGORY_TABLE, null, contentValues);
+
+        long catId = getCategoryId(categoryName);// need to implement new
+        Cat cat = new Cat(catId,categoryName);
+        String objId = categoryDB.push().getKey();
+        categoryDB.child(objId).setValue(cat);
+
         return id;
     }
 
@@ -591,6 +742,11 @@ public class myDBAdapter {
         contentValues.put(myDbHelper.subCategoryCatID, categoryID);
         contentValues.put(myDbHelper.subCategoryCatName, subCategoryName);
         id = db.insert(myhelper.SUB_CATEGORY_TABLE, null, contentValues);
+
+        String objId = subCategoryDB.push().getKey();
+        SubCat subCut = new SubCat(objId,categoryID,subCategoryName);
+        subCategoryDB.child(objId).setValue(subCut);
+
         return id;
     }
 

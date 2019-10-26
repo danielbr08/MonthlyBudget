@@ -292,7 +292,7 @@ public class InsertTransactionActivity extends AppCompatActivity
 
                 int idPerMonth = monthlyBudgetDB.getMaxIDPerMonthTRN(month.getMonth()) + 1;
 
-                Transaction transaction = new Transaction( TRAN_ID_PER_MONTH_NUMERATOR++, categoryName,paymentMethod , shop, payDate, transactionPrice, new Date());
+                Transaction transaction = new Transaction( month.getRefMonth(), TRAN_ID_PER_MONTH_NUMERATOR++, categoryName,paymentMethod , shop, payDate, transactionPrice, new Date());
                 boolean isStorno = false;
                 int stornoOf = -1;
 

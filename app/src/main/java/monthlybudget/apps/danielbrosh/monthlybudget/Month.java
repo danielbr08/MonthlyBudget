@@ -28,6 +28,14 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.*;
 
 public class Month
 {
+    public Date getRefMonth() {
+        return refMonth;
+    }
+
+    public boolean isTransChanged() {
+        return isTransChanged;
+    }
+
     //private long transactionsIdNumerator;
     private Date refMonth;
     private String dirPath;

@@ -10,6 +10,23 @@ import static monthlybudget.apps.danielbrosh.monthlybudget.global.LANGUAGE;
 
 public class Budget {
 
+    public Budget() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public long getBudgetNumber() {
+        return budgetNumber;
+    }
+
+    public void setBudgetNumber(int budgetNumber) {
+        this.budgetNumber = budgetNumber;
+    }
+
+    private String id;
+    private long budgetNumber;
     private String category;
     private String subCategory;
     private int value;
@@ -25,9 +42,24 @@ public class Budget {
         this.shop = shop;
         this.chargeDay = chargeDay;
         this.catPriority = catPriority;
+        this.subCategory = "";
     }
 
     public Budget(int catPriority,String category, String subCategory, int value, boolean isConstPayment, String shop, int chargeDay) {
+        this.category = category;
+        this.subCategory = subCategory;
+        this.value = value;
+        this.isConstPayment = isConstPayment;
+        this.shop = shop;
+        this.chargeDay = chargeDay;
+        this.catPriority = catPriority;
+
+        if(subCategory == null || subCategory.equals(""))
+            this.subCategory = LANGUAGE.subCategoryName;
+    }
+
+    public Budget(String id,long budgetNumber, int catPriority,String category, String subCategory, int value, boolean isConstPayment, String shop, int chargeDay) {
+        this.id = id;
         this.category = category;
         this.subCategory = subCategory;
         this.value = value;
@@ -55,7 +87,8 @@ public class Budget {
     public boolean equals(Object budget) {
         return budget instanceof Budget
                 && category.equals(((Budget)budget).category)
-                && subCategory.equals(((Budget)budget).subCategory)
+                && ( (subCategory == null && ((Budget)budget).subCategory == null) ||
+                     ( subCategory != null && subCategory.equals(((Budget)budget).subCategory) ) )
                 && value ==((Budget)budget).value
                 && isConstPayment ==((Budget)budget).isConstPayment
                 && ((shop == ((Budget)budget).shop)//null

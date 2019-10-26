@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity
             payDate = c.getTime();
 
             //Insert data
-            Transaction transaction = new Transaction(TRAN_ID_PER_MONTH_NUMERATOR++, categoryName,paymentMethod , shop, payDate, transactionPrice, new Date());
+            Transaction transaction = new Transaction(month.getRefMonth(),  TRAN_ID_PER_MONTH_NUMERATOR++, categoryName,paymentMethod , shop, payDate, transactionPrice, new Date());
             transaction.setIsStorno(false);
             transaction.setStornoOf(-1);
             month.setTransChanged(true);
